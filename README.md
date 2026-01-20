@@ -1,6 +1,8 @@
 # Cycle Tracker App
 **Track your Period FOR FREE**
+
 This is a simple app for visualizing your menstrual cycle and its stages.
+
 It can help you to see when the cycle starts over again and be ready for it.
 
 
