@@ -1,7 +1,8 @@
-import { View } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { View, Image } from 'react-native';
+import { Text } from 'react-native-paper';
 import { styles } from './HomeScreen.styles';
 import { useRouter } from 'expo-router';
+import Button from '../../components/ui/Button';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -10,10 +11,17 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text variant="headlineMedium" style={styles.text}>
         Welcome to
-        Cycle Tracker
       </Text>
-      <Button mode="contained" onPress={() => router.push('/dashboard/cycle/Cycle')}>
-        Get Started
+      <View>
+        <Image source={ require('../../../assets/icon.png') } style={styles.image} />
+      </View>
+      <Text variant="headlineMedium" style={styles.text}>
+        {"\n"}
+      </Text>
+      <Button
+        onPress={() => router.push('/dashboard/cycle/Cycle')}
+        text="Get Started"
+      >
       </Button>
     </View>
   );
