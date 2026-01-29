@@ -1,15 +1,18 @@
-import { View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { styles } from './CycleScreen.styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View } from "react-native";
+import { Text } from "react-native-paper";
+import { styles } from "./CycleScreen.styles";
+import CycleChart from "../../../components/ui/CycleChart";
 
 export default function CycleScreen() {
   return (
     <View style={styles.container}>
-      <Text variant="headlineMedium" style={styles.text}>
+      <Text variant="headlineMedium" style={styles.title}>
         Cycle Screen
       </Text>
-      <MaterialCommunityIcons name="sync" size={32} color="red" />
+      <Text variant="headlineMedium" style={styles.text}>
+        Luteal Phase | Follicular Phase
+      </Text>
+      <CycleChart text="Cycle Chart" />
     </View>
   );
 }

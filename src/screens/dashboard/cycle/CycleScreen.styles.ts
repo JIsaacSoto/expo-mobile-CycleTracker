@@ -6,7 +6,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
+  title: {
     fontSize: 28,
+  },
+  text: {
+    fontSize: 18,
   }
 });
