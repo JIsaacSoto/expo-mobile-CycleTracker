@@ -3,6 +3,7 @@ import { Text } from 'react-native-paper';
 import { styles } from './HomeScreen.styles';
 import { useRouter } from 'expo-router';
 import Button from '@/components/ui/Button';
+import { images } from '@/assets';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function HomeScreen() {
         Welcome to
       </Text>
       <View>
-        <Image source={ require('../../../assets/icon.png') } style={styles.image} />
+        <Image source={ images.icon } style={styles.image} />
       </View>
       <Text variant="headlineMedium" style={styles.text}>
         {"\n"}
