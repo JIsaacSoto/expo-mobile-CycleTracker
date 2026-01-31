@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 import { styles } from "./CycleScreen.styles";
-import CycleChart from "../../../components/ui/CycleChart";
+import CycleChart from "@/components/ui/CycleChart";
 
 export default function CycleScreen() {
   return (

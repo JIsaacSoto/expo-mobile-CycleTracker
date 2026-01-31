@@ -2,7 +2,7 @@ import { View, Image } from 'react-native';
 import { Text } from 'react-native-paper';
 import { styles } from './HomeScreen.styles';
 import { useRouter } from 'expo-router';
-import Button from '../../components/ui/Button';
+import Button from '@/components/ui/Button';
 
 export default function HomeScreen() {
   const router = useRouter();
