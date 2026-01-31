@@ -19,7 +19,7 @@ export default function HomeScreen() {
         {"\n"}
       </Text>
       <Button
-        onPress={() => router.push('/dashboard/cycle')}
+        onPress={() => router.push('/dashboard/config')}
         text="Get Started"
       >
       </Button>

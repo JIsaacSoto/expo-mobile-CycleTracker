@@ -5,6 +5,7 @@ import { useRouter, useSegments, Stack } from 'expo-router';
 const routes = [
   { key: 'cycle', title: 'Cycle', focusedIcon: 'sync' },
   { key: 'calendar', title: 'Calendar', focusedIcon: 'calendar', unfocusedIcon: 'calendar-outline' },
+  { key: 'config', title: 'Config', focusedIcon: 'cog', unfocusedIcon: 'cog-outline' },
 ];
 
 export default function Dashboard() {
