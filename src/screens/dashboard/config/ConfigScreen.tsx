@@ -57,6 +57,7 @@ export default function ConfigScreen() {
           label="Period Length (days)"
           mode="outlined"
           keyboardType="numeric"
+          placeholder="5"
           value={periodLength}
           onChangeText={(text) => {
             if (/^\d{0,2}$/.test(text)) {
@@ -68,6 +69,7 @@ export default function ConfigScreen() {
           label="Cycle Length (days)"
           mode="outlined"
           keyboardType="numeric"
+          placeholder="28"
           value={cycleLength}
           onChangeText={(text) => {
             if (/^\d{0,2}$/.test(text)) {

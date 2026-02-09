@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Platform, View } from "react-native";
+import React from "react";
+import { View, Pressable } from "react-native";
 import { TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -10,34 +10,37 @@ interface Props {
 }
 
 export default function DateInput({ label, value, onChange }: Props) {
-  const [show, setShow] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
-  const handleChange = (_: any, selectedDate?: Date) => {
-    setShow(Platform.OS === "ios");
-    if (selectedDate) {
-      onChange(selectedDate);
-    }
-  };
+  const formattedDate = value
+    ? value.toLocaleDateString()
+    : "";
 
   return (
     <View>
-      <TextInput
-        label={label}
-        mode="outlined"
-        value={value ? value.toLocaleDateString() : ""}
-        editable={false}
-        onPressIn={() => setShow(true)}
-        right={
-          <TextInput.Icon icon="calendar" onPress={() => setShow(true)} />
-        }
-      />
+      <Pressable onPress={() => setOpen(true)}>
+        <View pointerEvents="none">
+          <TextInput
+            label={label}
+            mode="outlined"
+            value={formattedDate}
+            editable={false}
+            right={
+              <TextInput.Icon icon="calendar" />
+            }
+          />
+        </View>
+      </Pressable>
 
-      {show && (
+      {open && (
         <DateTimePicker
           value={value ?? new Date()}
           mode="date"
-          display={Platform.OS === "ios" ? "spinner" : "default"}
-          onChange={handleChange}
+          display="calendar"
+          onChange={(_, selectedDate) => {
+            setOpen(false);
+            if (selectedDate) onChange(selectedDate);
+          }}
         />
       )}
     </View>
