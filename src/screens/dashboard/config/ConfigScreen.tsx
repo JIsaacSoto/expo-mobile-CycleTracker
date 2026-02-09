@@ -1,44 +1,90 @@
 import { View } from "react-native";
 import React from "react";
-import { Text, TextInput, Divider } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import Button from "@/components/ui/Button";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import DateInput from "@/components/ui/DateInput";
 import { styles } from "./ConfigScreen.styles";
 import { router } from "expo-router";
 
 export default function ConfigScreen() {
-  const [lastPeriodDate, setLastPeriodDate] = React.useState("");
+  const [lastPeriodDate, setLastPeriodDate] = React.useState<Date | null>(null);
   const [periodLength, setPeriodLength] = React.useState("");
   const [cycleLength, setCycleLength] = React.useState("");
+
+  const validate = () => {
+    if (!lastPeriodDate) return "Please select the last period date.";
+
+    const period = Number(periodLength);
+    const cycle = Number(cycleLength);
+
+    if (!period || !cycle) {
+      return "Period and cycle length are required.";
+    }
+
+    if (period < 1 || period > 10) {
+      return "Period length must be between 1 and 10 days.";
+    }
+
+    if (cycle < 21 || cycle > 35) {
+      return "Cycle length must be between 21 and 35 days.";
+    }
+
+    if (period >= cycle) {
+      return "Period length must be shorter than cycle length.";
+    }
+
+    if (lastPeriodDate > new Date()) {
+      return "Last period date cannot be in the future.";
+    }
+
+    return null;
+  };
 
   return (
     <View style={styles.container}>
       <Text variant="headlineMedium" style={styles.title}>
-        Config Screen
+        Settings
         {"\n"}
       </Text>
-      <View style={{ width: "80%", gap: 16 }}>
-        <TextInput
-          label="Last Period Date"
-          mode="outlined"
+      <View style={{ width: "80%", gap: 24 }}>
+        <DateInput
+          label="Last Period"
           value={lastPeriodDate}
-          onChangeText={(text) => setLastPeriodDate(text)}
+          onChange={setLastPeriodDate}
         />
+
         <TextInput
           label="Period Length (days)"
           mode="outlined"
+          keyboardType="numeric"
           value={periodLength}
-          onChangeText={(text) => setPeriodLength(text)}
+          onChangeText={(text) => {
+            if (/^\d{0,2}$/.test(text)) {
+              setPeriodLength(text);
+            }
+          }}
         />
         <TextInput
           label="Cycle Length (days)"
           mode="outlined"
+          keyboardType="numeric"
           value={cycleLength}
-          onChangeText={(text) => setCycleLength(text)}
+          onChangeText={(text) => {
+            if (/^\d{0,2}$/.test(text)) {
+              setCycleLength(text);
+            }
+          }}
         />
         <Button
-          onPress={() => router.push("/dashboard/config")}
-          text="Get Started"
+          onPress={() => {
+            const error = validate();
+            if (error) {
+              alert(error);
+              return;
+            }
+            router.push("/dashboard/cycle");
+          }}
+          text="Save & Continue"
         ></Button>
       </View>
     </View>
