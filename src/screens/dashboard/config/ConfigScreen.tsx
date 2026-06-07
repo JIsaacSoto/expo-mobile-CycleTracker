@@ -25,12 +25,8 @@ export default function ConfigScreen() {
       return "Period length must be between 1 and 10 days.";
     }
 
-    if (cycle < 21 || cycle > 35) {
-      return "Cycle length must be between 21 and 35 days.";
-    }
-
-    if (period >= cycle) {
-      return "Period length must be shorter than cycle length.";
+    if (cycle < 21 || cycle > 44) {
+      return "Cycle length must be between 21 and 44 days.";
     }
 
     if (lastPeriodDate > new Date()) {
@@ -58,6 +54,7 @@ export default function ConfigScreen() {
           mode="outlined"
           keyboardType="numeric"
           placeholder="5"
+          placeholderTextColor="rgba(0,0,0,0.3)"
           value={periodLength}
           onChangeText={(text) => {
             if (/^\d{0,2}$/.test(text)) {
@@ -70,6 +67,7 @@ export default function ConfigScreen() {
           mode="outlined"
           keyboardType="numeric"
           placeholder="28"
+          placeholderTextColor="rgba(0,0,0,0.3)"
           value={cycleLength}
           onChangeText={(text) => {
             if (/^\d{0,2}$/.test(text)) {
