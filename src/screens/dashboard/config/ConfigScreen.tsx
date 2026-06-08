@@ -5,11 +5,13 @@ import Button from "@/components/ui/Button";
 import DateInput from "@/components/ui/DateInput";
 import { styles } from "./ConfigScreen.styles";
 import { router } from "expo-router";
+import { useCycle } from "@/hooks/useCycle";
 
 export default function ConfigScreen() {
   const [lastPeriodDate, setLastPeriodDate] = React.useState<Date | null>(null);
   const [periodLength, setPeriodLength] = React.useState("");
   const [cycleLength, setCycleLength] = React.useState("");
+  const { setCycle } = useCycle();
 
   const validate = () => {
     if (!lastPeriodDate) return "Please select the last period date.";
@@ -76,15 +78,22 @@ export default function ConfigScreen() {
           }}
         />
         <Button
+          text="Save & Continue"
           onPress={() => {
             const error = validate();
             if (error) {
               alert(error);
               return;
             }
+
+            setCycle({
+              lastPeriodDate,
+              periodLength: Number(periodLength),
+              cycleLength: Number(cycleLength),
+            });
+
             router.push("/dashboard/cycle");
           }}
-          text="Save & Continue"
         ></Button>
       </View>
     </View>
