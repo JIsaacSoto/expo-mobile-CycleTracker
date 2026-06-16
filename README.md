@@ -17,8 +17,9 @@ Mobile app developed with **Expo** and **React Native**.
 ## ▶️ Run the project
 ```bash
 npm install
-npm start
+npx expo start -c --tunnel
 ```
+(Scan the QR with the App "Expo Go")
 
 ## Future potential big implementations
 - Better cycle prediction using Machine Learning Models.
