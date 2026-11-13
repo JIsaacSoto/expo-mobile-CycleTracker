@@ -14,7 +14,7 @@ import { setCalendarLocale } from "@/components/calendar/calendarLocale";
 import LogSummary from "@/components/log/LogSummary";
 import { useCycle } from "@/hooks/useCycle";
 import { capitalize, useI18n } from "@/i18n";
-import { computeStats, getDayInfoRange, validatePeriodStart } from "@/lib/cycle";
+import { computeStats, getDayInfo, getDayInfoRange, validatePeriodStart } from "@/lib/cycle";
 import { addDays, addMonthsISO, startOfMonthISO, type ISODate } from "@/lib/dates";
 import { useAppTheme } from "@/theme";
 
@@ -50,7 +50,17 @@ export default function CalendarScreen() {
     return marks;
   }, [dayInfo, data.logs, selected, today]);
 
-  const onDayPress = useCallback((date: string) => setSelected(date), []);
+  const onDayPress = useCallback(
+    (date: string) => {
+      setSelected(date);
+      const target = startOfMonthISO(date);
+      if (target !== month) {
+        setMonth(target);
+        setCalendarKey((k) => k + 1);
+      }
+    },
+    [month]
+  );
 
   const goToToday = () => {
     setMonth(startOfMonthISO(today));
@@ -58,7 +68,7 @@ export default function CalendarScreen() {
     setCalendarKey((k) => k + 1);
   };
 
-  const info = dayInfo[selected];
+  const info = useMemo(() => dayInfo[selected] ?? getDayInfo(timeline, selected), [dayInfo, timeline, selected]);
   const selectedLog = data.logs[selected];
   const periodEntry = data.periods.find((p) => p.startDate === selected);
   const isFuture = selected > today;
