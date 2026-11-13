@@ -22,7 +22,9 @@ function period(startDate: ISODate, length?: number): PeriodEntry {
   return { id: `p${idCounter}`, startDate, length };
 }
 
-function data(partial: Partial<CycleData> & { settings?: Partial<CycleSettings> } = {}): CycleData {
+function data(
+  partial: Omit<Partial<CycleData>, "settings"> & { settings?: Partial<CycleSettings> } = {}
+): CycleData {
   return {
     periods: partial.periods ?? [],
     settings: { ...CYCLE_DEFAULTS, ...partial.settings },
