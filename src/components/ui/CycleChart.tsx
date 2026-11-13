@@ -17,9 +17,36 @@ const CycleChart = ({ text }: Props) => {
   const periodLength = cycle.periodLength;
   const cycleLength = cycle.cycleLength;
 
-  const currentDay = 1;
+  const currentDay = 15; // Placeholder for current day
 
-  const angle = (currentDay / cycleLength) * 360;
+  const lutealLength =
+    Math.round(
+      10 +
+      ((cycleLength - 21) / (44 - 21)) * 4
+    );
+
+  const fertileWindow =
+  Math.max(
+    3,
+    6 - Math.floor(periodLength / 3)
+  );
+
+  const fertileEnd =
+    cycleLength - lutealLength;
+
+  const ovulationDay =
+    fertileEnd - (fertileWindow - 1) / 2;
+
+  const follicularLength =
+    ovulationDay -
+    fertileWindow -
+    periodLength;
+
+  const currentDayAngle = (currentDay / cycleLength) * 360;
+  const ovulationAngle = ((ovulationDay - 0.5) / cycleLength) * 360;
+
+  const toPercent = (days: number) =>
+    (days / cycleLength) * 100;
 
   return (
     <VictoryChart
@@ -40,10 +67,10 @@ const CycleChart = ({ text }: Props) => {
       />
       <VictoryPie
         data={[
-          { x: 1, y: (periodLength * 100 / cycleLength), l: "Menstruation", fill: "#e3622a" },
-          { x: 2, y: 21.42, l: "Proliferative Phase", fill: "#9cdee2" },
-          { x: 3, y: 17.85, l: "Ovulation", fill: "#9ef66c" },
-          { x: 4, y: 42.84, l: "Secretory Phase", fill: "#e8a7ae" },
+          { x: 1, y: toPercent(periodLength), l: "Menstruation", fill: "#e3622a" },
+          { x: 2, y: toPercent(follicularLength), l: "Proliferative Phase (Follicular)", fill: "#9cdee2" },
+          { x: 3, y: toPercent(fertileWindow), l: "Ovulation", fill: "#9ef66c" },
+          { x: 4, y: toPercent(lutealLength), l: "Secretory Phase (Luteal)", fill: "#e8a7ae" },
         ]}
         style={{
           data: {
@@ -67,8 +94,8 @@ const CycleChart = ({ text }: Props) => {
       <VictoryScatter
         polar
         data={[
-          { x: 180, y: 180, fill: "#5dcc70" }, // ovulation indicator
-          { x: angle, y: 180, fill: "#2D7FF9" }, // actual day indicator
+          { x: ovulationAngle, y: 180, fill: "#5dcc70" }, // ovulation indicator
+          { x: currentDayAngle, y: 180, fill: "#2D7FF9" }, // current day indicator
         ]}
         size={18}
         style={{
