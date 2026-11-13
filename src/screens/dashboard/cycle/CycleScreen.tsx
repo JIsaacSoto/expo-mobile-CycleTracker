@@ -18,7 +18,7 @@ import PeriodDialog from "@/components/cycle/PeriodDialog";
 import LogSummary from "@/components/log/LogSummary";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import { useCycle } from "@/hooks/useCycle";
-import { capitalize, useI18n } from "@/i18n";
+import { useI18n } from "@/i18n";
 import { useAppTheme } from "@/theme";
 import { styles } from "./CycleScreen.styles";
 
@@ -89,7 +89,7 @@ export default function CycleScreen() {
         onSubmit={(date) => {
           addPeriod(date);
           setLogPeriodOpen(false);
-          setSnack(`${t("logPeriod.title")}: ${capitalize(formatDate(date, "medium"))}`);
+          setSnack(t("logPeriod.saved", { date: formatDate(date, "medium") }));
         }}
       />
       <Snackbar visible={!!snack} onDismiss={() => setSnack(null)} duration={2500}>

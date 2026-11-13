@@ -4,7 +4,7 @@ import { Button as PaperButton, Dialog, IconButton, Portal, Text } from "react-n
 import NumberStepper from "@/components/ui/NumberStepper";
 import SectionCard from "@/components/ui/SectionCard";
 import { useCycle } from "@/hooks/useCycle";
-import { capitalize, useI18n } from "@/i18n";
+import { useI18n } from "@/i18n";
 import { addDays } from "@/lib/dates";
 import type { CycleStatus } from "@/types/cycle";
 import { useAppTheme } from "@/theme";
@@ -102,7 +102,8 @@ export default function PendingPeriodCard({ status, onLogPeriod }: Props) {
           </PaperButton>
           {lateDays > 0 ? (
             <PaperButton
-              mode="contained-tonal"
+              mode="outlined"
+              textColor={theme.colors.onPrimaryContainer}
               onPress={() => {
                 setDelay(Math.min(1, lateDays));
                 setDelayOpen(true);
@@ -140,7 +141,7 @@ export default function PendingPeriodCard({ status, onLogPeriod }: Props) {
             />
             <Text variant="bodyLarge" style={{ textAlign: "center" }}>
               {t("pending.delayStarted", {
-                date: capitalize(formatDate(addDays(expected, delay), "long")),
+                date: formatDate(addDays(expected, delay), "long"),
               })}
             </Text>
           </Dialog.Content>

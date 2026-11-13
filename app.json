@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Expo Mobile Cycle Tracker",
+    "name": "CycleTracker",
     "slug": "expo-mobile-cycletracker",
     "scheme": "cycletracker",
     "version": "1.0.0",
@@ -30,10 +30,14 @@
     "plugins": [
       "expo-router",
       "@react-native-community/datetimepicker",
-      "expo-localization"
-    ],
-    "router": {
-      "root": "src/app"
-    }
+      "expo-localization",
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "color": "#AD404A"
+        }
+      ]
+    ]
   }
 }

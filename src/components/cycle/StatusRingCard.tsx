@@ -73,7 +73,9 @@ export default function StatusRingCard({ status, hasTodayLog, onLogPeriod, onLog
             {cycleDay}
           </Text>
           <Text variant="labelLarge" style={{ color: theme.colors.onSurfaceVariant }}>
-            {t("cycle.ofLength", { length: layout.cycleLength })}
+            {late
+              ? t("cycle.expectedLength", { length: layout.cycleLength })
+              : t("cycle.ofLength", { length: layout.cycleLength })}
           </Text>
           <View style={[styles.phasePill, { backgroundColor: late ? theme.colors.warningContainer : theme.colors.phase[status.phase].container }]}>
             <View style={[styles.phaseDot, { backgroundColor: phaseColor }]} />

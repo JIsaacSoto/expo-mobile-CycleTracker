@@ -87,6 +87,7 @@ export default function CycleRing({
   const ovulationPos = polar(c, r, ovulationDeg);
   const todayDeg = late ? 360 - degPerDay / 2 : (day - 0.5) * degPerDay;
   const todayPos = polar(c, r, todayDeg);
+  const knobLabel = late ? `+${Math.max(0, cycleDay - L - 1)}` : String(Math.max(1, Math.round(day)));
   const todayPhase =
     layout.phases.find((p) => Math.round(day) >= p.startDay && Math.round(day) <= p.endDay)?.phase ??
     "luteal";
@@ -177,14 +178,14 @@ export default function CycleRing({
             />
             <SvgText
               x={todayPos.x}
-              y={todayPos.y + knob * 0.36}
-              fontSize={knob * 0.95}
+              y={todayPos.y + knob * (knobLabel.length > 2 ? 0.28 : 0.36)}
+              fontSize={knob * (knobLabel.length > 2 ? 0.72 : 0.95)}
               fontWeight="700"
               fontFamily="sans-serif"
               fill={colors.onSurface}
               textAnchor="middle"
             >
-              {late ? "+" : Math.max(1, Math.round(day))}
+              {knobLabel}
             </SvgText>
           </G>
         ) : null}

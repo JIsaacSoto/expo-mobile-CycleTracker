@@ -1,9 +1,10 @@
 import React from "react";
-import { Platform, Pressable, View } from "react-native";
-import { Dialog, HelperText, Portal, TextInput } from "react-native-paper";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Dialog, HelperText, Icon, Portal, TextInput } from "react-native-paper";
 import DateTimePicker, { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { capitalize, useI18n } from "@/i18n";
 import { fromISODate, isISODate, toISODate, type ISODate } from "@/lib/dates";
+import { useAppTheme } from "@/theme";
 import Button from "./Button";
 
 interface Props {
@@ -27,6 +28,7 @@ export default function DateInput({
   helper,
 }: Props) {
   const { t, formatDate } = useI18n();
+  const theme = useAppTheme();
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [draft, setDraft] = React.useState<ISODate | null>(value);
 
@@ -63,8 +65,11 @@ export default function DateInput({
             value={value ? capitalize(formatDate(value, "full")) : ""}
             editable={false}
             error={!!error}
-            right={<TextInput.Icon icon="calendar" />}
+            style={styles.input}
           />
+          <View style={styles.icon}>
+            <Icon source="calendar" size={24} color={error ? theme.colors.error : theme.colors.onSurfaceVariant} />
+          </View>
         </View>
       </Pressable>
       {error ? (
@@ -106,3 +111,8 @@ export default function DateInput({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  input: { paddingRight: 40 },
+  icon: { position: "absolute", right: 14, top: 0, bottom: 0, justifyContent: "center", paddingTop: 6 },
+});

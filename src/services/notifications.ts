@@ -107,3 +107,13 @@ export async function sendTestNotification(title: string, body: string, channelN
     },
   });
 }
+
+/** Calls `onOpen(url)` when the user taps a notification. Returns an unsubscribe function. */
+export function addNotificationOpenListener(onOpen: (url: string) => void): () => void {
+  if (!notificationsSupported()) return () => undefined;
+  const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+    const url = response.notification.request.content.data?.url;
+    if (typeof url === "string") onOpen(url);
+  });
+  return () => subscription.remove();
+}
