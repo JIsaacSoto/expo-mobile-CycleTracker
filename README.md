@@ -65,7 +65,23 @@ npm run typecheck # TypeScript
 ```
 
 > Local notifications work in Expo Go on Android. Remote push notifications are not used.
-> For a production build (or to remove Expo Go limitations) use a development build / EAS Build.
+
+## 📦 Build an APK locally
+Requires Java 17 (Gradle doesn't run on newer JDKs) and the Android SDK
+(platform 36, build-tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1). The script
+looks for them in `~/Android/jdk17` and `~/Android/Sdk`; override with
+`CYCLETRACKER_JAVA_HOME` / `ANDROID_HOME`.
+
+```bash
+npm run build:apk -- --clean   # regenerate ./android from app.json, then build
+npm run build:apk              # faster rebuild reusing ./android
+```
+The APK lands in `builds/CycleTracker-v<version>-<versionCode>.apk`. It's signed
+with the debug key, so it's fine for sideloading but not for the Play Store
+(use EAS Build or an upload keystore for that). `./android` is generated
+(Continuous Native Generation) and git-ignored: change native config in
+`app.json` or `plugins/`, never by hand. Never lower `expo.android.versionCode`:
+Android refuses to install an older code over a newer one.
 
 ## Future potential big implementations
 - Better cycle prediction using Machine Learning Models.
