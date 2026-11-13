@@ -52,7 +52,7 @@ export function createEmptyCycleData(): CycleData {
     periods: [],
     settings: { ...CYCLE_DEFAULTS },
     autoCycleStarts: [],
-    lateExpected: null,
+    lateCycleStart: null,
     logs: {},
   };
 }
@@ -144,7 +144,7 @@ export function sanitizeCycleData(raw: unknown): CycleData {
     autoCycleStarts: Array.isArray(d.autoCycleStarts)
       ? [...new Set(d.autoCycleStarts.filter(isISODate))].sort()
       : [],
-    lateExpected: isISODate(d.lateExpected) ? d.lateExpected : null,
+    lateCycleStart: isISODate(d.lateCycleStart) ? d.lateCycleStart : null,
     logs: sanitizeLogs(d.logs),
   };
 }

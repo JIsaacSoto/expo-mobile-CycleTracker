@@ -29,7 +29,7 @@ function data(
     periods: partial.periods ?? [],
     settings: { ...CYCLE_DEFAULTS, ...partial.settings },
     autoCycleStarts: partial.autoCycleStarts ?? [],
-    lateExpected: partial.lateExpected ?? null,
+    lateCycleStart: partial.lateCycleStart ?? null,
     logs: partial.logs ?? {},
   };
 }
@@ -256,7 +256,7 @@ describe("getCycleStatus", () => {
 
   it("keeps counting in late mode until the period is confirmed", () => {
     const status = getCycleStatus(
-      data({ periods: [period("2026-10-01")], lateExpected: "2026-10-29" }),
+      data({ periods: [period("2026-10-01")], lateCycleStart: "2026-10-01" }),
       "2026-11-02"
     )!;
     expect(status.state).toBe("late");
@@ -336,7 +336,7 @@ describe("getCycleTimeline", () => {
 
   it("starts predictions the day after today in late mode", () => {
     const late = getCycleTimeline(
-      data({ periods: [period("2026-10-01")], lateExpected: "2026-10-29" }),
+      data({ periods: [period("2026-10-01")], lateCycleStart: "2026-10-01" }),
       "2026-11-02",
       60
     );

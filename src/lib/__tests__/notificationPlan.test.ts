@@ -8,7 +8,7 @@ const base: CycleData = {
   periods: [{ id: "a", startDate: "2026-11-01" }],
   settings: { ...CYCLE_DEFAULTS },
   autoCycleStarts: [],
-  lateExpected: null,
+  lateCycleStart: null,
   logs: {},
 };
 
@@ -71,7 +71,7 @@ describe("buildNotificationPlan", () => {
   });
 
   it("only schedules a late reminder in late mode", () => {
-    const late = { ...base, periods: [{ id: "a", startDate: "2026-10-01" }], lateExpected: "2026-10-29" };
+    const late = { ...base, periods: [{ id: "a", startDate: "2026-10-01" }], lateCycleStart: "2026-10-01" };
     const specs = plan(late, "2026-11-12");
     expect(specs.map((s) => s.type)).toEqual(["late"]);
     expect(iso(specs[0].date)).toBe("2026-11-14");

@@ -36,10 +36,10 @@ describe("cycle actions", () => {
 
   it("enters late mode and leaves it when the period is logged", () => {
     const late = cycleActions.markNotArrived(setup(), "2026-11-02");
-    expect(late.lateExpected).toBe("2026-10-29");
+    expect(late.lateCycleStart).toBe("2026-10-01");
     expect(getCycleStatus(late, "2026-11-02")?.state).toBe("late");
     const logged = cycleActions.addPeriod(late, "2026-11-02");
-    expect(logged.lateExpected).toBeNull();
+    expect(logged.lateCycleStart).toBeNull();
     expect(getCycleStatus(logged, "2026-11-02")?.state).toBe("normal");
     expect(computeStats(logged).cycleLengths).toEqual([32]);
   });
@@ -81,7 +81,7 @@ describe("persistence schema", () => {
       periods: [{ startDate: "2026-10-01" }, { startDate: "bad" }, { startDate: "2026-10-01" }],
       settings: { cycleLength: 300, periodLength: 4, lutealLength: "x" },
       autoCycleStarts: ["2026-10-29", 4],
-      lateExpected: "nope",
+      lateCycleStart: "nope",
       logs: {
         "2026-10-02": { flow: "heavy", symptoms: ["cramps", "invented"], bbt: 99 },
         "not-a-date": { flow: "heavy" },
@@ -91,7 +91,7 @@ describe("persistence schema", () => {
     expect(data.periods.map((p) => p.startDate)).toEqual(["2026-10-01"]);
     expect(data.settings).toEqual({ cycleLength: 28, periodLength: 4, lutealLength: 14, useHistoryAverage: true });
     expect(data.autoCycleStarts).toEqual(["2026-10-29"]);
-    expect(data.lateExpected).toBeNull();
+    expect(data.lateCycleStart).toBeNull();
     expect(Object.keys(data.logs)).toEqual(["2026-10-02"]);
     expect(data.logs["2026-10-02"].symptoms).toEqual(["cramps"]);
     expect(data.logs["2026-10-02"].bbt).toBeNull();

@@ -68,7 +68,7 @@ export default function HistoryScreen() {
                   {bleeding
                     ? t("history.bleeding", { days: t("common.days", { count: bleeding }) })
                     : t("history.bleedingEstimated", {
-                        days: t("common.days", { count: data.settings.periodLength }),
+                        days: t("common.days", { count: status?.stats.periodLength ?? data.settings.periodLength }),
                       })}
                 </Text>
                 {excluded ? (

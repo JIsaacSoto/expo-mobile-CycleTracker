@@ -116,7 +116,7 @@ export default function PeriodDialog({
           <PaperButton
             mode="contained"
             disabled={!!error}
-            onPress={() => onSubmit(date, showLength && !autoLength ? length : (entry?.length ?? null))}
+            onPress={() => onSubmit(date, showLength ? (autoLength ? null : length) : (entry?.length ?? null))}
           >
             {t("common.save")}
           </PaperButton>

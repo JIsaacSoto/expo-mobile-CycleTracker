@@ -16,6 +16,24 @@ export function sortPeriods(periods: PeriodEntry[]): PeriodEntry[] {
   );
 }
 
+interface BleedingRun {
+  length: number;
+  lastDay: ISODate;
+}
+
+/** Consecutive light/medium/heavy flow days logged from the period start. */
+function bleedingRun(entry: PeriodEntry, logs: Record<ISODate, DailyLog>): BleedingRun | null {
+  let count = 0;
+  let day = entry.startDate;
+  let lastDay: ISODate | null = null;
+  while (isBleeding(logs[day]?.flow) && count < 15) {
+    count++;
+    lastDay = day;
+    day = addDays(day, 1);
+  }
+  return lastDay ? { length: count, lastDay } : null;
+}
+
 /**
  * Bleeding days of a recorded period: the explicit length if the user set one,
  * otherwise the consecutive days with light/medium/heavy flow logged from the start.
@@ -26,13 +44,34 @@ export function recordedPeriodLength(
   logs: Record<ISODate, DailyLog>
 ): number | null {
   if (entry.length && entry.length > 0) return entry.length;
-  let count = 0;
-  let day = entry.startDate;
-  while (isBleeding(logs[day]?.flow) && count < 15) {
-    count++;
-    day = addDays(day, 1);
-  }
-  return count > 0 ? count : null;
+  return bleedingRun(entry, logs)?.length ?? null;
+}
+
+/**
+ * A period may still be in progress when its logged bleeding reaches today or
+ * yesterday (today may not be logged yet) and no explicit length was set.
+ */
+export function isPeriodInProgress(
+  entry: PeriodEntry,
+  logs: Record<ISODate, DailyLog>,
+  today: ISODate
+): boolean {
+  if (entry.length && entry.length > 0) return false;
+  const run = bleedingRun(entry, logs);
+  if (!run) return entry.startDate >= addDays(today, -1);
+  return run.lastDay >= addDays(today, -1);
+}
+
+/** Bleeding days to use for a period: an ongoing period is never shorter than the average. */
+export function effectivePeriodLength(
+  entry: PeriodEntry,
+  logs: Record<ISODate, DailyLog>,
+  today: ISODate,
+  fallback: number
+): number {
+  const recorded = recordedPeriodLength(entry, logs);
+  if (recorded === null) return fallback;
+  return isPeriodInProgress(entry, logs, today) ? Math.max(recorded, fallback) : recorded;
 }
 
 export interface CycleInterval {
@@ -70,7 +109,11 @@ function mean(values: number[]): number {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-export function computeStats(data: CycleData): CycleStats {
+/**
+ * Averages and regularity. With `today`, a period still in progress is left
+ * out of the period-length average.
+ */
+export function computeStats(data: CycleData, today?: ISODate): CycleStats {
   const { settings, logs } = data;
   const intervals = getIntervals(data);
   const valid = intervals.filter((i) => i.valid);
@@ -81,6 +124,7 @@ export function computeStats(data: CycleData): CycleStats {
 
   const sorted = sortPeriods(data.periods);
   const periodLengths = sorted
+    .filter((p) => !today || !isPeriodInProgress(p, logs, today))
     .map((p) => recordedPeriodLength(p, logs))
     .filter((n): n is number => n !== null)
     .slice(-HISTORY_WINDOW);

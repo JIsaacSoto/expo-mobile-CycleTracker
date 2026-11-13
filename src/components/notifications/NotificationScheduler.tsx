@@ -32,27 +32,36 @@ export default function NotificationScheduler() {
     return addNotificationOpenListener((url) => router.push(url as never));
   }, [supported, router]);
 
+  // Syncs run one after another; a run is skipped when a newer one is queued,
+  // so a slow scheduling pass can never interleave with a newer plan.
+  const queue = useRef<Promise<void>>(Promise.resolve());
+  const generation = useRef(0);
+
   useEffect(() => {
     if (!supported || !hydrated || !preferencesReady) return;
-    const timer = setTimeout(async () => {
-      const prefs = preferences.notifications;
-      if (!prefs.enabled || !preferences.onboardingCompleted || !status) {
-        if (lastSignature.current !== "none") {
-          await cancelAllScheduled();
-          lastSignature.current = "none";
-        }
-        return;
-      }
-      if ((await getPermissionState()) !== "granted") return;
-      const plan = buildNotificationPlan({ status, timeline, prefs, now: new Date(), t, formatDate });
-      const signature = JSON.stringify(plan.map((p) => [p.id, p.date.getTime(), p.title, p.body]));
-      if (signature === lastSignature.current) return;
-      try {
-        await replaceScheduled(plan, t("notifications.channelName"));
-        lastSignature.current = signature;
-      } catch (error) {
-        console.warn("[notifications] Could not schedule", error);
-      }
+    const timer = setTimeout(() => {
+      const run = ++generation.current;
+      queue.current = queue.current
+        .then(async () => {
+          if (run !== generation.current) return;
+          const prefs = preferences.notifications;
+          if (!prefs.enabled || !preferences.onboardingCompleted || !status) {
+            if (lastSignature.current !== "none") {
+              await cancelAllScheduled();
+              lastSignature.current = "none";
+            }
+            return;
+          }
+          if ((await getPermissionState()) !== "granted") return;
+          if (run !== generation.current) return;
+          const plan = buildNotificationPlan({ status, timeline, prefs, now: new Date(), t, formatDate });
+          const signature = JSON.stringify(plan.map((p) => [p.id, p.date.getTime(), p.title, p.body]));
+          if (signature === lastSignature.current) return;
+          lastSignature.current = null;
+          await replaceScheduled(plan, t("notifications.channelName"));
+          lastSignature.current = signature;
+        })
+        .catch((error) => console.warn("[notifications] Could not schedule", error));
     }, 800);
     return () => clearTimeout(timer);
   }, [supported, hydrated, preferencesReady, preferences, status, timeline, t, formatDate]);

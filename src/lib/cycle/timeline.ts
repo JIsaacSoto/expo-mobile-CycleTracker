@@ -1,4 +1,4 @@
-import { addDays, diffDays, eachDay, type ISODate } from "@/lib/dates";
+import { addDays, diffDays, eachDay, minISO, type ISODate } from "@/lib/dates";
 import type {
   CycleData,
   CycleInstance,
@@ -9,10 +9,10 @@ import type {
   DayInfo,
   UpcomingEvent,
 } from "@/types/cycle";
-import { PREDICTION_HORIZON_DAYS } from "./constants";
+import { PREDICTION_HORIZON_DAYS, VALID_INTERVAL } from "./constants";
 import { fertilityForDay, getCycleLayout, phaseForDay } from "./layout";
 import { detectOvulation, type DetectedOvulation } from "./signs";
-import { computeStats, recordedPeriodLength, sortPeriods } from "./stats";
+import { computeStats, effectivePeriodLength, recordedPeriodLength, sortPeriods } from "./stats";
 
 interface BuildOptions {
   start: ISODate;
@@ -78,7 +78,7 @@ function resolve(data: CycleData, today: ISODate): Resolution | null {
   const sorted = sortPeriods(data.periods);
   if (!sorted.length) return null;
 
-  const stats = computeStats(data);
+  const stats = computeStats(data, today);
   const { cycleLength: L, periodLength: P, lutealLength: luteal } = stats;
   const last = sorted[sorted.length - 1];
 
@@ -87,11 +87,14 @@ function resolve(data: CycleData, today: ISODate): Resolution | null {
   );
   const anchor = autos.length ? autos[autos.length - 1] : last.startDate;
   const anchorConfirmed = autos.length === 0;
-  const anchorPeriod = anchorConfirmed
-    ? recordedPeriodLength(last, data.logs) ?? P
-    : P;
+  const anchorPeriod = anchorConfirmed ? effectivePeriodLength(last, data.logs, today, P) : P;
+  // Late mode belongs to the cycle the user marked as "not arrived yet".
+  const lateMode = data.lateCycleStart === anchor;
 
-  const anchorDetected = detectOvulation(data.logs, anchor, today);
+  // Fertility signs after the expected end belong to the next (automatic) cycle,
+  // unless the user said the period has not arrived yet.
+  const detectUntil = lateMode ? today : minISO(today, addDays(anchor, L - 1));
+  const anchorDetected = detectOvulation(data.logs, anchor, detectUntil);
   const anchorLength = lengthFromDetection(anchor, anchorDetected, L, luteal);
   const expected = addDays(anchor, anchorLength);
 
@@ -117,7 +120,7 @@ function resolve(data: CycleData, today: ISODate): Resolution | null {
     };
   }
 
-  if (data.lateExpected === expected) {
+  if (lateMode) {
     // The cycle keeps growing until the user confirms the period.
     const extended = diffDays(today, anchor) + 1;
     const current: CycleInstance = {
@@ -181,10 +184,13 @@ function timelineFrom(
   const confirmed = new Map(sorted.map((p) => [p.startDate, p]));
   const first = sorted[0].startDate;
 
-  const starts = uniqueSorted([
-    ...sorted.map((p) => p.startDate),
-    ...data.autoCycleStarts.filter((a) => a > first),
-  ]).filter((s) => s < r.anchor);
+  // Automatic starts too close to a confirmed one would create overlapping cycles.
+  const autos = data.autoCycleStarts.filter(
+    (a) => a > first && sorted.every((p) => Math.abs(diffDays(a, p.startDate)) >= VALID_INTERVAL.min)
+  );
+  const starts = uniqueSorted([...sorted.map((p) => p.startDate), ...autos]).filter(
+    (s) => s < r.anchor
+  );
   starts.push(r.anchor);
 
   const cycles: CycleInstance[] = [];
@@ -360,6 +366,7 @@ export function getCycleStatus(data: CycleData, today: ISODate): CycleStatus | n
     fertility: late ? null : fertilityForDay(layout, cycleDay),
     nextPeriod,
     daysUntilNextPeriod: diffDays(nextPeriod, today),
+    anchorStart: r.anchor,
     pendingExpected: r.pendingExpected,
     pendingAutoStarts: r.pendingAutoStarts,
     lateDays: r.pendingExpected ? Math.max(0, diffDays(today, r.pendingExpected)) : 0,

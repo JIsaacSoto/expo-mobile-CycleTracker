@@ -2,7 +2,7 @@
  * Pure state transitions for the cycle data. The context wraps them with
  * React state; keeping them pure makes them easy to test.
  */
-import { addDays, diffDays, type ISODate } from "@/lib/dates";
+import { addDays, type ISODate } from "@/lib/dates";
 import type { CycleData, CycleSettings, PeriodEntry } from "@/types/cycle";
 import { isLogEmpty, type DailyLog } from "@/types/log";
 import { computeStats, sortPeriods } from "./stats";
@@ -31,7 +31,7 @@ export function completeSetup(data: CycleData, input: SetupInput): CycleData {
       lutealLength: input.lutealLength,
     },
     autoCycleStarts: [],
-    lateExpected: null,
+    lateCycleStart: null,
   };
 }
 
@@ -39,10 +39,39 @@ export function updateSettings(data: CycleData, patch: Partial<CycleSettings>): 
   return { ...data, settings: { ...data.settings, ...patch } };
 }
 
+function nextConfirmedAfter(periods: PeriodEntry[], date: ISODate): ISODate | null {
+  return sortPeriods(periods).find((p) => p.startDate > date)?.startDate ?? null;
+}
+
 /**
- * Adds a confirmed period start. Automatic starts close to it are replaced,
- * and late mode ends when the new start belongs to the current cycle.
+ * Automatic starts chain from the previous confirmed period. When a confirmed
+ * start appears at `date`, the automatic starts from half a cycle before it up
+ * to the next confirmed period are replaced by it.
  */
+function dropAutosReplacedBy(data: CycleData, date: ISODate): ISODate[] {
+  const half = Math.floor(computeStats(data).cycleLength / 2);
+  const from = addDays(date, -half);
+  const until = nextConfirmedAfter(data.periods, date);
+  return data.autoCycleStarts.filter((a) => !(a > from && (until === null || a < until)));
+}
+
+/** Removing a confirmed start invalidates the automatic starts that chained from it. */
+function dropAutosChainedFrom(data: CycleData, date: ISODate): ISODate[] {
+  const until = nextConfirmedAfter(data.periods, date);
+  return data.autoCycleStarts.filter((a) => !(a > date && (until === null || a < until)));
+}
+
+/** Late mode only survives while its cycle start still exists and is the latest one. */
+function withValidLateMode(data: CycleData): CycleData {
+  const late = data.lateCycleStart;
+  if (!late) return data;
+  const sorted = sortPeriods(data.periods);
+  const latest = sorted.length ? sorted[sorted.length - 1].startDate : null;
+  const exists = sorted.some((p) => p.startDate === late) || data.autoCycleStarts.includes(late);
+  return exists && latest !== null && late >= latest ? data : { ...data, lateCycleStart: null };
+}
+
+/** Adds a confirmed period start, replacing the automatic starts it supersedes. */
 export function addPeriod(
   data: CycleData,
   startDate: ISODate,
@@ -50,17 +79,11 @@ export function addPeriod(
   id: string = newId()
 ): CycleData {
   if (data.periods.some((p) => p.startDate === startDate)) return data;
-  const half = Math.floor(computeStats(data).cycleLength / 2);
-  const sorted = sortPeriods(data.periods);
-  const latest = sorted.length ? sorted[sorted.length - 1].startDate : null;
-  return {
+  const withPeriod: CycleData = {
     ...data,
     periods: sortPeriods([...data.periods, { id, startDate, length }]),
-    autoCycleStarts: data.autoCycleStarts.filter(
-      (a) => Math.abs(diffDays(a, startDate)) >= half
-    ),
-    lateExpected: !latest || startDate > latest ? null : data.lateExpected,
   };
+  return withValidLateMode({ ...withPeriod, autoCycleStarts: dropAutosReplacedBy(withPeriod, startDate) });
 }
 
 export function updatePeriod(
@@ -68,15 +91,27 @@ export function updatePeriod(
   id: string,
   patch: Partial<Omit<PeriodEntry, "id">>
 ): CycleData {
-  return {
-    ...data,
-    periods: sortPeriods(data.periods.map((p) => (p.id === id ? { ...p, ...patch } : p))),
-  };
+  const current = data.periods.find((p) => p.id === id);
+  if (!current) return data;
+  const updated = { ...current, ...patch };
+  if (updated.startDate === current.startDate) {
+    return { ...data, periods: data.periods.map((p) => (p.id === id ? updated : p)) };
+  }
+  if (data.periods.some((p) => p.id !== id && p.startDate === updated.startDate)) return data;
+  // A new date behaves like removing the old start and adding the new one.
+  const without: CycleData = { ...data, periods: data.periods.filter((p) => p.id !== id) };
+  const cleaned: CycleData = { ...without, autoCycleStarts: dropAutosChainedFrom(without, current.startDate) };
+  return addPeriod(cleaned, updated.startDate, updated.length ?? null, id);
 }
 
 export function removePeriod(data: CycleData, id: string): CycleData {
-  if (data.periods.length <= 1) return data;
-  return { ...data, periods: data.periods.filter((p) => p.id !== id) };
+  const entry = data.periods.find((p) => p.id === id);
+  if (!entry || data.periods.length <= 1) return data;
+  const without: CycleData = { ...data, periods: data.periods.filter((p) => p.id !== id) };
+  return withValidLateMode({
+    ...without,
+    autoCycleStarts: dropAutosChainedFrom(without, entry.startDate),
+  });
 }
 
 /** "It came on time": confirms the pending expected date. */
@@ -99,7 +134,7 @@ export function confirmDelayed(data: CycleData, today: ISODate, days: number): C
 export function markNotArrived(data: CycleData, today: ISODate): CycleData {
   const status = getCycleStatus(data, today);
   if (!status?.pendingExpected) return data;
-  return { ...data, lateExpected: status.pendingExpected };
+  return { ...data, lateCycleStart: status.anchorStart };
 }
 
 /** Accept the automatic cycles: they advance the calendar but don't count for averages. */
@@ -109,12 +144,12 @@ export function keepAutomatic(data: CycleData, today: ISODate): CycleData {
   return {
     ...data,
     autoCycleStarts: [...new Set([...data.autoCycleStarts, ...status.pendingAutoStarts])].sort(),
-    lateExpected: null,
+    lateCycleStart: null,
   };
 }
 
 export function exitLateMode(data: CycleData): CycleData {
-  return { ...data, lateExpected: null };
+  return { ...data, lateCycleStart: null };
 }
 
 export function saveLog(data: CycleData, log: DailyLog): CycleData {

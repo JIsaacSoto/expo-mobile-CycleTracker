@@ -31,8 +31,8 @@ export interface CycleData {
    * (not confirmed). They advance the cycle but never count for averages.
    */
   autoCycleStarts: ISODate[];
-  /** Expected date the user marked as "not arrived yet" (late mode). */
-  lateExpected: ISODate | null;
+  /** Start of the cycle whose period the user marked as "not arrived yet" (late mode). */
+  lateCycleStart: ISODate | null;
   logs: Record<ISODate, DailyLog>;
 }
 
@@ -129,6 +129,8 @@ export interface CycleStatus {
   fertility: FertilityLevel | null;
   nextPeriod: ISODate;
   daysUntilNextPeriod: number;
+  /** Last confirmed or accepted-automatic start (the cycle being counted). */
+  anchorStart: ISODate;
   /** Expected start waiting for confirmation (awaiting/late). */
   pendingExpected: ISODate | null;
   /** Automatic cycle starts between the pending date and today (awaiting). */
