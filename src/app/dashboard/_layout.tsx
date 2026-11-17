@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { Tabs } from "expo-router";
 import { CommonActions } from "@react-navigation/native";
 import { BottomNavigation, Icon } from "react-native-paper";

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { StyleSheet, View } from "react-native";
 import { Icon, Text } from "react-native-paper";
 import SectionCard from "@/components/ui/SectionCard";

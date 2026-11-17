@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Snackbar, Text } from "react-native-paper";

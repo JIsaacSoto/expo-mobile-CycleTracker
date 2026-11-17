@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Card, Icon, IconButton, Text } from "react-native-paper";

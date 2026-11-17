@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 export type ThemePreference = "light" | "dark" | "system";
 export type LanguagePreference = "system" | "es" | "en";
 export type TemperatureUnit = "C" | "F";

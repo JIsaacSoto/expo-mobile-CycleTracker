@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { addDays, diffDays, type ISODate } from "@/lib/dates";
 import type { DailyLog } from "@/types/log";
 import type { OvulationSource } from "@/types/cycle";

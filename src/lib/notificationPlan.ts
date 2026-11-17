@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 /**
  * Builds the list of local notifications to schedule from the cycle status
  * and the user's alert preferences. Pure: no Expo APIs, fully testable.

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 /** Regression tests for issues found in code review. */
 import { CYCLE_DEFAULTS, computeStats, cycleActions, getCycleStatus, getCycleTimeline, getDayInfo } from "@/lib/cycle";
 import type { CycleData } from "@/types/cycle";

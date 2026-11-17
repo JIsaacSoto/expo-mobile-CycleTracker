@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 /**
  * Pure state transitions for the cycle data. The context wraps them with
  * React state; keeping them pure makes them easy to test.

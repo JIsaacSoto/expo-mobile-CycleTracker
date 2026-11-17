@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import React, { createContext, useContext, useMemo } from "react";
 import { getLocales } from "expo-localization";
 import { format } from "date-fns";

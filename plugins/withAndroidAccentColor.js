@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 /**
  * Sets `colorAccent` on the Android app theme so native dialogs (the date
  * picker) use the brand colour instead of AppCompat's default teal. A night

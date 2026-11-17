@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button as PaperButton, Dialog, HelperText, Portal, Switch, Text } from "react-native-paper";

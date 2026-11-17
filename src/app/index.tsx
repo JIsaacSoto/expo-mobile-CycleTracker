@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { Redirect } from "expo-router";
 import LoadingScreen from "@/components/ui/LoadingScreen";
 import { useCycle } from "@/hooks/useCycle";
