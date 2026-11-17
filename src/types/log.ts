@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import type { ISODate } from "@/lib/dates";
 
 export const FLOW_LEVELS = ["spotting", "light", "medium", "heavy"] as const;

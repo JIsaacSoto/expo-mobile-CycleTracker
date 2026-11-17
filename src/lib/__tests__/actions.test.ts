@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { cycleActions, getCycleStatus, computeStats } from "@/lib/cycle";
 import { createEmptyCycleData, sanitizeCycleData, sanitizePreferences, unwrap } from "@/services/schema";
 import { DEFAULT_PREFERENCES } from "@/types/preferences";

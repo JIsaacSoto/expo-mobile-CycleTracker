@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import type { NotificationSpec } from "@/lib/notificationPlan";

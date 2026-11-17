@@ -1,6 +1,13 @@
 {
   "name": "expo-mobile-cycletracker",
   "version": "1.0.0",
+  "description": "CycleTracker: private, medically grounded menstrual cycle tracker for Android.",
+  "author": "José Isaac Soto López (https://github.com/JIsaacSoto)",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JIsaacSoto/expo-mobile-CycleTracker.git"
+  },
   "main": "index.ts",
   "scripts": {
     "start": "expo start",

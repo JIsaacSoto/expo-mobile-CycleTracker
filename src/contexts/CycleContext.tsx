@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cycleActions, getCycleStatus, getCycleTimeline } from "@/lib/cycle";
 import type { SetupInput } from "@/lib/cycle/actions";

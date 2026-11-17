@@ -2,6 +2,7 @@
   "expo": {
     "name": "CycleTracker",
     "slug": "expo-mobile-cycletracker",
+    "description": "CycleTracker © 2026 José Isaac Soto López. All rights reserved.",
     "scheme": "cycletracker",
     "version": "1.0.0",
     "orientation": "portrait",

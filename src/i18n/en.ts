@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import type { Translations } from "./types";
 
 const en: Translations = {
@@ -394,6 +396,8 @@ const en: Translations = {
     resetBody: "Your history, logs and settings will be deleted. This can't be undone.",
     aboutSection: "About",
     version: "Version {{version}}",
+    author: "Developed by José Isaac Soto López",
+    copyright: "© {{year}} José Isaac Soto López. All rights reserved.",
     sources: "Medical sources",
     sourceList:
       "Wilcox AJ et al. Timing of sexual intercourse in relation to ovulation. N Engl J Med, 1995.|Munro MG et al. FIGO system for abnormal uterine bleeding (2018 revision). Int J Gynecol Obstet, 2018.|ACOG. Menstruation in girls and adolescents: using the menstrual cycle as a vital sign. Committee Opinion 651, 2015.|Bull JR et al. Real-world menstrual cycle characteristics of more than 600,000 menstrual cycles. NPJ Digit Med, 2019.",

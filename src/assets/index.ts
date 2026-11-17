@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 export const images = {
   icon: require("./images/icon.png"),
   favicon: require("./images/favicon.png"),

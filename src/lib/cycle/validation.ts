@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { diffDays, type ISODate } from "@/lib/dates";
 import type { CycleSettings, PeriodEntry } from "@/types/cycle";
 import { CLINICAL, CYCLE_LIMITS, VALID_INTERVAL } from "./constants";

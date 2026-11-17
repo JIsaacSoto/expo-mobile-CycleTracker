@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+# SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 # Builds a release APK locally (signed with the debug key: for testing only).
 #
 #   npm run build:apk            # reuse ./android if it exists

@@ -1,4 +1,6 @@
 # Cycle Tracker App
+> © 2026 **José Isaac Soto López** — All rights reserved. Source-available, not open source: see [LICENSE](LICENSE).
+
 **Track your Period FOR FREE**
 
 A free, private and medically grounded menstrual cycle tracker for Android (Expo / React Native).
@@ -88,3 +90,11 @@ Android refuses to install an older code over a newer one.
 - Detection and prediction of menstrual irregularities using ML.
 - Irregular-cycle mode (prediction ranges instead of single dates); the period history is already stored for it.
 - Data export/backup.
+
+## ©️ Author & license
+Created and maintained by **José Isaac Soto López** ([@JIsaacSoto](https://github.com/JIsaacSoto)).
+
+Copyright © 2026 José Isaac Soto López. **All rights reserved.** The code is published so it can be read
+and reviewed, but copying, redistributing, publishing on app stores, commercial use or derivative works
+require prior written permission. The "CycleTracker" name, logo and icons are part of this reservation.
+See [LICENSE](LICENSE) for the full terms.

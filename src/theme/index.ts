@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { MD3DarkTheme, MD3LightTheme, useTheme, type MD3Theme } from "react-native-paper";
 import type { Phase } from "@/types/cycle";
 

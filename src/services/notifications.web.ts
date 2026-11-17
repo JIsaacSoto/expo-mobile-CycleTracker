@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 /**
  * Web build: local notifications are not available. Same API as
  * notifications.ts, without importing expo-notifications.

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 José Isaac Soto López. All rights reserved.
+// SPDX-License-Identifier: LicenseRef-CycleTracker-Proprietary — see LICENSE.
 import { useCallback, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import {
@@ -38,6 +40,9 @@ import {
 import type { LanguagePreference, TemperatureUnit, ThemePreference } from "@/types/preferences";
 import { useAppTheme } from "@/theme";
 import { styles } from "./ConfigScreen.styles";
+
+/** Year of first publication; the copyright notice must not follow the device clock. */
+const COPYRIGHT_YEAR = 2026;
 
 function formatTime(hour: number, minute: number) {
   return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
@@ -287,6 +292,10 @@ export default function ConfigScreen() {
         {/* About */}
         <SectionCard title={t("settings.aboutSection")} icon="information-outline" iconColor={theme.colors.primary}>
           <Text variant="bodyMedium">{t("settings.version", { version })}</Text>
+          <Text variant="bodyMedium">{t("settings.author")}</Text>
+          <Text variant="bodySmall" style={{ color: theme.colors.onSurfaceVariant }}>
+            {t("settings.copyright", { year: COPYRIGHT_YEAR })}
+          </Text>
           <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
             {t("disclaimer.full")}
           </Text>
